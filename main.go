@@ -2,10 +2,11 @@ package main
 
 import (
 	"archive/zip"
+	"fmt"
 	"io"
 	"log"
 	"os"
-	// "time"
+	"time"
 )
 
 func main() {
@@ -27,15 +28,14 @@ func main() {
 	// 	log.Fatal(err)
 	// }
 
-	// currentTime := time.Now()
-	// fileName := currentTime.Format("02_01_2006")
+	currentTime := time.Now()
+	dateString := currentTime.Format("02_01_2006")
 
-	// formattedString := fmt.Sprintf("Hello, %s!", "World")
-
-	// dbFile := "\\servhp\\Base\\zup2"
+	archivePath := fmt.Sprintf("F:\\1c\\backup\\files\\%s.zip", dateString)
+	dbFile := "\\\\servhp\\Base\\zup2\\1Cv8.1CD"
 
 	// 2. Archive the file to a zip file
-	zipFile, err := os.Create("./backup\\base.zip")
+	zipFile, err := os.Create(archivePath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -44,13 +44,13 @@ func main() {
 	zipWriter := zip.NewWriter(zipFile)
 	defer zipWriter.Close()
 
-	fileToArchive, err := os.Open("./db/base.1CD")
+	fileToArchive, err := os.Open(dbFile)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer fileToArchive.Close()
 
-	fileInZip, err := zipWriter.Create("base.1CD")
+	fileInZip, err := zipWriter.Create("1Cv8.1CD")
 	if err != nil {
 		log.Fatal(err)
 	}
