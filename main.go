@@ -4,35 +4,24 @@ import (
 	"archive/zip"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"time"
 )
 
 func main() {
-	// // 1. Copy a file to a folder
-	// sourceFile, err := os.Open("./db/base.1CD")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// defer sourceFile.Close()
-
-	// destFile, err := os.Create("./backup/base.1CD")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// defer destFile.Close()
-
-	// _, err = io.Copy(destFile, sourceFile)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
 
 	currentTime := time.Now()
 	dateString := currentTime.Format("02_01_2006")
 
 	archivePath := fmt.Sprintf("F:\\1c\\backup\\files\\%s.zip", dateString)
 	dbFile := "\\\\servhp\\Base\\zup2\\1Cv8.1CD"
+	archiveDb(archivePath, dbFile)
+	clearFolder()
+}
+
+func archiveDb(archivePath string, dbFile string) {
 
 	// 2. Archive the file to a zip file
 	zipFile, err := os.Create(archivePath)
@@ -58,5 +47,16 @@ func main() {
 	_, err = io.Copy(fileInZip, fileToArchive)
 	if err != nil {
 		log.Fatal(err)
+	}
+}
+
+func clearFolder() {
+	// crear folder, remove files older then 7 days
+	folderPath := "F:\\1c\\backup\\files"
+	info, _ := ioutil.ReadDir(folderPath)
+	for _, f := range info {
+		if !f.IsDir() && (time.Since(f.ModTime()) > 7*24*time.Hour) { // 7 days
+			os.Remove(fmt.Sprintf("%s\\%s", folderPath, f.Name()))
+		}
 	}
 }
